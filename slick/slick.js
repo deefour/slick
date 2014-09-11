@@ -551,7 +551,8 @@
                 break;
 
             case 'index':
-                var index = $(event.target).parents('.slick-slide').first().index() * _.options.slidesToScroll;
+                var $slide = $target.parents('.slick-slide').first(),
+                    index = $slide.index() * _.options.slidesToScroll;
                 _.slideHandler(index);
                 if(asNavFor != null)  asNavFor.slideHandler(index);                break;
 
@@ -588,7 +589,7 @@
         _.$list.off('.slick');
         $(window).off('.slick-' + _.instanceUid);
         $(document).off('.slick-' + _.instanceUid);
-        
+
     };
 
     Slick.prototype.disableTransition = function(slide) {
@@ -1345,13 +1346,17 @@
 
         var _ = this;
         var asNavFor = _.options.asNavFor != null ? $(_.options.asNavFor).getSlick() : null;
-        var index = parseInt($(event.target).parents('.slick-slide').first().attr("index"));
+        var $slide = $(event.target).parents('.slick-slide').first();
+        var index = parseInt($slide.attr("index"));
         if(!index) index = 0;
 
-        if(_.slideCount <= _.options.slidesToShow){
+        if(_.slideCount <= _.options.slidesToShow ){
             return;
         }
-        _.slideHandler(index);
+
+        if ( ! $slide.hasClass('slick-active')) {
+          _.slideHandler(index);
+        }
 
         if(asNavFor != null){
             if(asNavFor.slideCount <= asNavFor.options.slidesToShow){
